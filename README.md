@@ -1,1 +1,1 @@
-# Qualiconvert-seo-server
+# qualiconvert-server
