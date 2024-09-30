@@ -49,7 +49,7 @@ app.post('/api/submit-form', async (req, res) => {
 
     // Send email using Mailgun
     const data = {
-      from: 'Qualiconvert <noreply@Qualiconvertdigital.com>',
+      from: 'Qualiconvert <noreply@qualiconvert.com>',
       to: formData.email, // Use the email from the form data
       subject: 'New Onboarding SEO Form Submission',
       text: `Thank you for submitting your onboarding SEO form`
