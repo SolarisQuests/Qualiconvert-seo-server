@@ -117,9 +117,69 @@ app.post('/api/submit-form', async (req, res) => {
     /* End PDF generation code */
 
     // Prepare email content
-    const emailContent = Object.entries(formData)
-      .map(([key, value]) => `${key}: ${value}`)
+      // Function to map keys to their respective labels
+      function formatKeyLabel(key, value) {
+          if (value == null || value === '') return ''; // Skip empty values
+        
+          switch (key) {
+            case 'practiceName':
+              return `Practice Name: <b>${value}</b>`;
+            case 'contactName':
+              return `Contact Name: <b>${value}</b>`;
+            case 'businessEmail':
+              return `Business Email: <b>${value}</b>`;
+            case 'description':
+              return `Brief Description: <b>${value}</b>`;
+            case 'services':
+              return `Main Services: <b>${value}</b>`;
+            case 'location':
+              return `Location: <b>${value}</b>`;
+            case 'city':
+              return `City: <b>${value}</b>`;
+            case 'state':
+              return `State: <b>${value}</b>`;
+            case 'zip':
+              return `Zip: <b>${value}</b>`;
+            case 'seasonalTrends':
+              return `Seasonal Trends: <b>${value}</b>`;
+            case 'idealCustomers':
+              return `Ideal Customers: <b>${value}</b>`;
+            case 'customerChoice':
+              return `Why do your best customers choose you: <b>${value}</b>`;
+            case 'uniqueFeatures':
+              return `What makes you different from your competitors: <b>${value}</b>`;
+            case 'competitors':
+              return `Who are your main competitors: <b>${value}</b>`;
+            case 'websiteSuccess':
+              return `How do you measure the success of your website: <b>${value}</b>`;
+            case 'nonConversionReason':
+              return `Why do you think somebody who may land on your website does not convert: <b>${value}</b>`;
+            case 'importantActions':
+              return `Which actions on the website are most important to you: <b>${value}</b>`;
+            case 'digitalMarketingHistory':
+              return `Have you invested in any digital marketing activities in the past: <b>${value}</b>`;
+            case 'seoOptimization':
+              return `Has your website been optimized for SEO in the past: <b>${value}</b>`;
+            case 'targetKeywords':
+              return `For optimization purposes, please provide target keywords: <b>${value}</b>`;
+            case 'seoReporting':
+              return `If applicable, please share any reporting, keyword research: <b>${value}</b>`;
+            case 'email':
+              return `Email: <b>${value}</b>`;
+            default:
+              return `${key}: <b>${value}</b>`;
+          }
+        }
+
+    /*const emailContent = Object.entries(formData)
+       .map(([key, value]) => `${key}: ${value}`) 
       .join('\n');
+      */
+
+    const emailContent = Object.entries(formData)
+      .map(([key, value]) => formatKeyLabel(key, value))
+      .filter(Boolean) // Remove empty lines
+      .join('\n<br>');  
 
     // Add Terms & Conditions confirmation to the email
     // const termsLink = 'https://onboarding.qualiconvert.com/terms';
@@ -132,10 +192,15 @@ app.post('/api/submit-form', async (req, res) => {
       from: 'Qualiconvert <noreply@qualiconvert.com>',
      // to:'sriram@legaciestechno.com',
        to: formData.email, // Use the email from the form data
-      cc: 'sheldon@auxoinnovation.com', 
-      bcc:'noreply@auxoinnovations.com,anthony@auxoinnovations.com', 
+     
+      bcc:'noreply@auxoinnovations.com,anthony@auxoinnovations.com,sheldon@auxoinnovation.com', 
       subject: 'New Onboarding SEO Form Submission',
-      text: `Thank you for submitting your onboarding SEO form. Here are the details you provided:\n\n${emailContent}`,
+     // text: `Thank you for submitting your onboarding SEO form. Here are the details you provided:\n\n${emailContent}`,
+      html: `
+        <p>Thank you for submitting your onboarding SEO form. Here are the details you provided:</p>
+        ${emailContent}
+        <p>Best regards,<br>QualiConvert Team</p>
+      `,
       attachment: pdfPath, // Attached the generated PDF
     };
 
